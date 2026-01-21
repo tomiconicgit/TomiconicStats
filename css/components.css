@@ -16,23 +16,17 @@
     margin: 0 auto;
 }
 
-/* Glassmorphism Effect */
 .glass {
-    background: rgba(10, 10, 10, 0.7);
+    background: rgba(10, 10, 10, 0.75);
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .brand-logo {
-    height: 28px; /* Adjust based on your PNG aspect ratio */
+    height: 28px;
     width: auto;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-}
-
-.brand-logo:active {
-    transform: scale(0.95);
+    background: rgba(255,255,255,0.1); /* Placeholder visual */
 }
 
 .nav-links {
@@ -41,7 +35,7 @@
 }
 
 .nav-links button {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
     padding: 6px 14px;
@@ -49,49 +43,32 @@
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-links button.active {
     background: #ffffff;
     color: #000000;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
-/* --- Badges & Indicators --- */
-.badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.badge-red { background: var(--accent-red); color: white; }
-.badge-blue { background: var(--accent-blue); color: white; }
-
+/* --- Live Indicators --- */
 .live-dot {
     width: 8px;
     height: 8px;
-    background-color: var(--accent-red);
+    background-color: #E63946;
     border-radius: 50%;
     margin-right: 6px;
     display: inline-block;
-    box-shadow: 0 0 8px var(--accent-red);
-    animation: pulseLive 1.5s infinite;
+    box-shadow: 0 0 8px rgba(230, 57, 70, 0.5);
+    animation: pulse 1.5s infinite;
 }
 
-@keyframes pulseLive {
-    0% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1); }
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
 }
 
-/* --- Global Entry Animations --- */
-.animate-slide-up {
+.animate-entry {
     animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     opacity: 0;
 }
@@ -100,6 +77,3 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
