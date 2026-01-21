@@ -1,0 +1,87 @@
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 75vh;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.hero-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 10px 0;
+    line-height: 1.1;
+}
+
+/* Horizontal Scrolling Sections */
+.section-title {
+    padding: 20px 20px 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.scroll-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 20px 20px;
+    gap: 15px;
+}
+
+/* Stat Cards */
+.stat-card {
+    flex: 0 0 85%; /* Mobile width */
+    scroll-snap-align: center;
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.stat-val { font-size: 32px; font-weight: 800; }
+.stat-label { color: var(--text-secondary); font-size: 14px; text-transform: uppercase; }
+
+/* Article Preview Cards */
+.article-card {
+    flex: 0 0 160px;
+    scroll-snap-align: start;
+    cursor: pointer;
+}
+
+.article-thumb {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background-color: #333;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 8px;
+}
+
+.article-head { font-size: 14px; font-weight: 600; line-height: 1.4; }
+
+@media (min-width: 768px) {
+    .stat-card { flex: 0 0 300px; }
+}
