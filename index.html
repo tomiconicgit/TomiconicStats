@@ -9,23 +9,24 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/article.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="css/stats.css"> <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <nav class="top-nav">
-        <div class="nav-links">
-            <button onclick="router.navigate('home')" class="active">Home</button>
-            <button onclick="router.navigate('stats')">Statistics</button>
-            <button onclick="router.navigate('articles')">Articles</button>
+    <nav class="top-nav glass">
+        <div class="nav-content">
+            <img src="path/to/placeholder-logo.png" alt="Logo" class="brand-logo" />
+            <div class="nav-links">
+                <button onclick="router.navigate('home')" class="active">Home</button>
+                <button onclick="router.navigate('stats')">Data</button>
+                <button onclick="router.navigate('articles')">Read</button>
+            </div>
         </div>
     </nav>
 
-    <main id="app">
-        </main>
+    <main id="app"></main>
 
     <script type="module" src="js/app.js"></script>
 </body>
