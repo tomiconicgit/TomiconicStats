@@ -1,49 +1,37 @@
-/* Navigation */
-.top-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    padding: 20px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-    pointer-events: none; /* Let clicks pass through to hero */
+/* --- components.css --- */
+
+/* Glass Effect Utility */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
 }
 
-.nav-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    pointer-events: auto;
+.top-nav {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    padding: 15px 20px;
+}
+
+.nav-content {
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+.brand-logo {
+    height: 35px; width: auto; /* Logo sizing */
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
 }
 
 .nav-links button {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    background: transparent; border: none; color: var(--text-secondary);
+    font-weight: 600; font-size: 15px; margin-left: 15px;
+    transition: color 0.3s;
 }
+.nav-links button.active { color: white; }
 
-.nav-links button:hover, .nav-links button.active {
-    background: white;
-    color: black;
+/* Live Indicator */
+.live-dot {
+    display: inline-block; width: 8px; height: 8px;
+    background-color: var(--accent-red); border-radius: 50%;
+    margin-right: 6px; animation: pulseLive 2s infinite;
 }
-
-/* Badge Labels */
-.badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 1px;
-    margin-right: 8px;
-}
-.badge.new { background: var(--accent); color: white; }
-.badge.viewed { background: #333; color: #fff; }
