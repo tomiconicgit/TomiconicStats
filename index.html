@@ -1,102 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>TOM Admin Studio</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TOM Admin Studio</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <!-- LOGIN SCREEN -->
 <div id="login-screen" class="screen">
-  <h1>Admin Login</h1>
+  <h1>TOM Admin Login</h1>
   <input type="text" id="github-username" placeholder="GitHub Username">
   <input type="password" id="github-token" placeholder="Personal Access Token">
-  <button id="login-btn">Login</button>
+  <button id="login-btn" class="primary">Login</button>
   <p id="login-error" class="error"></p>
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="admin-panel" class="screen hidden">
-
+<!-- MAIN DASHBOARD -->
+<div id="dashboard" class="screen hidden">
   <header>
     <h1>TOM Admin Studio</h1>
     <button id="logout-btn">Logout</button>
   </header>
 
-  <nav>
-    <button class="tab-btn active" data-tab="content-tab">Content</button>
-    <button class="tab-btn" data-tab="preview-tab">Live Preview</button>
-  </nav>
+  <section class="dashboard-controls">
+    <button id="create-new-btn" class="primary">Create New Cinematic Article</button>
+  </section>
 
-  <!-- CONTENT TAB -->
-  <section id="content-tab" class="tab active">
-    <div class="controls">
-      <button id="add-content-btn">Add New Content</button>
-    </div>
+  <section id="content-library" class="content-library">
+    <h2>Your Articles & Stats</h2>
     <div id="content-list" class="list-container"></div>
   </section>
-
-  <!-- LIVE PREVIEW TAB -->
-  <section id="preview-tab" class="tab">
-    <h2>Live Preview</h2>
-    <div id="preview-area"></div>
-  </section>
-
 </div>
 
-<!-- MODAL FOR NEW / EDIT CONTENT -->
-<div id="content-modal" class="modal hidden">
-  <div class="modal-backdrop"></div>
-  <div class="modal-panel">
-    <button id="modal-close">✕</button>
-    <h2 id="modal-title">Add Content</h2>
+<!-- CREATE / EDIT CONTENT PAGE -->
+<div id="editor-screen" class="screen hidden">
+  <header>
+    <h1>Article Builder</h1>
+    <button id="editor-back">← Back to Dashboard</button>
+  </header>
 
-    <form id="content-form">
-      <label>Content Type</label>
-      <select id="content-type">
-        <option value="stat-card">Stat Card</option>
-        <option value="image-card">Image Card</option>
-        <option value="video-card">Video Card</option>
-      </select>
-
-      <label>Title</label>
-      <input type="text" id="content-title" required>
-
-      <label>Summary</label>
-      <textarea id="content-summary"></textarea>
-
-      <label>Hero Section</label>
-      <input type="checkbox" id="content-hero">
-
-      <label>Rails (comma-separated)</label>
-      <input type="text" id="content-rails" placeholder="current-state, latest-statements">
-
-      <label>Labels (comma-separated)</label>
-      <input type="text" id="content-labels" placeholder="LIVE, TRACKER">
-
-      <label>Updated</label>
-      <input type="date" id="content-updated">
-
-      <!-- Stats section (only for stat-card) -->
-      <div id="stats-container">
-        <h3>Stats</h3>
-        <div id="stats-list-form"></div>
-        <button type="button" id="add-stat-btn">Add Stat</button>
-      </div>
-
-      <!-- Media section (for image/video cards) -->
-      <div id="media-container">
-        <label>Image URL</label>
-        <input type="text" id="content-image" placeholder="assets/example.jpg">
-        <label>Video URL</label>
-        <input type="text" id="content-video" placeholder="https://...">
-      </div>
-
-      <button type="submit" class="primary">Save Content</button>
-    </form>
+  <div id="editor-controls">
+    <button id="add-paragraph-btn">Add Paragraph</button>
+    <button id="add-image-btn">Add Image</button>
+    <button id="add-video-btn">Add Video</button>
+    <button id="add-stat-btn">Add Stat Block</button>
   </div>
+
+  <div id="editor-canvas" class="editor-canvas">
+    <!-- Paragraphs, images, videos, stats blocks will be appended here -->
+  </div>
+
+  <div id="editor-meta">
+    <label>Article Title</label>
+    <input type="text" id="article-title">
+
+    <label>Hero Header Image</label>
+    <input type="text" id="hero-image" placeholder="assets/header.jpg">
+
+    <label>Hero Headline Overlay</label>
+    <input type="text" id="hero-headline">
+
+    <label>Tags (comma-separated)</label>
+    <input type="text" id="article-tags">
+
+    <label>Rails (comma-separated)</label>
+    <input type="text" id="article-rails">
+
+    <label>Published Date</label>
+    <input type="date" id="article-published">
+
+    <button id="publish-btn" class="primary">Publish Article</button>
+  </div>
+
+  <section id="live-preview">
+    <h2>Live Preview</h2>
+    <div id="preview-canvas" class="preview-canvas"></div>
+  </section>
 </div>
 
 <script type="module" src="app.js"></script>
