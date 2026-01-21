@@ -1,138 +1,176 @@
-import { articles, stats } from './data.js';
+import { articles, globalStats } from './data.js';
 
 const app = document.getElementById('app');
+
+// --- Helper: Number Animation ---
+const animateValue = (obj, start, end, duration) => {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        // Handle decimals
+        let val = (progress * (end - start) + start);
+        obj.innerHTML = Number.isInteger(end) ? Math.floor(val).toLocaleString() : val.toFixed(1);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+             obj.innerHTML = Number.isInteger(end) ? end.toLocaleString() : end.toFixed(1);
+        }
+    };
+    window.requestAnimationFrame(step);
+};
 
 // --- Views ---
 
 const HomeView = () => {
-    const heroArticle = articles.find(a => a.isHero) || articles[0];
-    const otherArticles = articles.filter(a => !a.isHero);
-
-    let statsHTML = stats.map(s => `
-        <div class="stat-card" onclick="alert('Detailed Stats View for: ${s.label}')">
-            <div class="stat-label">${s.label}</div>
-            <div class="stat-val" style="color: ${s.color}">${s.value}</div>
-            <div class="stat-trend">${s.trend}</div>
+    // Hero logic...
+    const hero = articles.find(a => a.isHero) || articles[0];
+    
+    // Generate Stats Cards (HTML)
+    const statsHTML = globalStats.map((s, index) => `
+        <div class="stat-card-home" id="card-${index}" onclick="window.loadStatDetail('${s.id}')">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span style="font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px;">
+                    <span class="live-dot"></span> Live Tracking
+                </span>
+                <span style="font-size:16px;">↗</span>
+            </div>
+            <div class="stat-val-wrapper" style="font-size:42px; font-weight:800; color:${s.color};">
+                ${s.prefix || ''}<span class="live-num" data-val="${s.value}">${s.value}</span>${s.suffix || ''}
+            </div>
+            <div style="font-size:14px; color:#ccc; margin-top:5px;">${s.label}</div>
         </div>
     `).join('');
 
-    let articlesHTML = otherArticles.map(a => `
-        <div class="article-card" onclick="window.loadArticle(${a.id})">
-            <img src="${a.image}" class="article-thumb" loading="lazy" />
-            <div class="badge new">New</div>
-            <div class="article-head">${a.title}</div>
+    // Generate Dots (HTML)
+    const dotsHTML = globalStats.map((_, i) => `<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+
+    // Generate 16:9 Article Sliders (HTML)
+    const articlesHTML = articles.filter(a => !a.isHero).map(a => `
+        <div class="article-slider-item" onclick="window.loadArticle(${a.id})">
+            <div class="article-slider-tag">${a.category}</div>
+            <img src="${a.image}" class="article-slider-bg" />
+            <div class="article-slider-overlay">
+                <h3 style="font-size:18px; line-height:1.2; font-weight:600; text-shadow:0 2px 10px rgba(0,0,0,0.5);">${a.title}</h3>
+            </div>
         </div>
     `).join('');
 
     return `
-        <div class="hero" style="background-image: url('${heroArticle.image}');" onclick="window.loadArticle(${heroArticle.id})">
-            <div class="hero-content">
-                <span class="badge new">Breaking</span>
-                <h1 class="hero-title">${heroArticle.title}</h1>
-                <p>${heroArticle.category} • ${heroArticle.date}</p>
+        <div class="hero animate-entry" style="background-image: url('${hero.image}'); height:70vh; background-size:cover; display:flex; align-items:flex-end;">
+            <div class="hero-content" style="background:linear-gradient(to top, #000, transparent); width:100%; padding:30px 20px 80px;">
+                <span style="background:var(--accent-red); color:white; padding:4px 8px; font-weight:800; font-size:10px; text-transform:uppercase;">Breaking</span>
+                <h1 style="font-size:40px; margin-top:10px; line-height:1.05;">${hero.title}</h1>
             </div>
         </div>
 
-        <h3 class="section-title">Key Metrics</h3>
-        <div class="scroll-container hide-scroll">
-            ${statsHTML}
-        </div>
-
-        <h3 class="section-title">Latest Articles</h3>
-        <div class="scroll-container hide-scroll">
-            ${articlesHTML}
-        </div>
-        
-        <div style="height: 100px;"></div> `;
-};
-
-const ArticleView = (article) => {
-    window.scrollTo(0,0);
-    
-    // Generate coded statistics for this specific article
-    const statBlocks = Object.entries(article.stats).map(([key, val]) => `
-        <div class="article-stat-block">
-            <small style="color:#888; text-transform:uppercase;">${key}</small>
-            <div style="font-size:24px; font-weight:bold; color:var(--accent);">${val}</div>
-        </div>
-    `).join('');
-
-    return `
-        <button class="back-btn" onclick="router.navigate('home')">← Back</button>
-        <div class="article-view">
-            <div class="article-hero" style="background-image: url('${article.heroImage}');">
-                <div style="position:absolute; bottom:0; padding:20px; background:linear-gradient(transparent, #050505);">
-                    <h1 style="font-size:36px; line-height:1.1;">${article.title}</h1>
+        <div style="position:relative; top:-40px; z-index:10;" class="animate-entry delay-1">
+            <div class="stat-wrapper">
+                <div class="stat-slider hide-scroll" id="statSlider">
+                    ${statsHTML}
+                </div>
+                <div class="dots-container">
+                    ${dotsHTML}
                 </div>
             </div>
-            <div class="article-body">
-                <p style="font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 20px;">
-                    ${article.content.substring(0, 50)}...
-                </p>
-                ${statBlocks}
-                <p>${article.content} Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
-                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                <img src="${article.image}" style="width:100%; border-radius:12px; margin: 20px 0;" />
-                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </div>
         </div>
+
+        <h3 style="padding:0 20px; margin-bottom:15px; font-weight:600; color:var(--text-secondary);" class="animate-entry delay-2">Latest Reports</h3>
+        <div class="stat-slider hide-scroll animate-entry delay-2">
+            ${articlesHTML}
+        </div>
+        <div style="height:100px;"></div>
     `;
 };
 
-const ListView = (type) => {
-    // Reusing logic for the "Full Library" view
-    const data = type === 'articles' ? articles : stats;
-    
+const StatDetailView = (id) => {
+    const stat = globalStats.find(s => s.id === id);
+    window.scrollTo(0,0);
+
+    // Mock "Coded" Visualization (CSS bars)
+    const bars = stat.history.map(h => {
+        const height = (h / Math.max(...stat.history)) * 100;
+        return `<div style="width:40px; height:${height}%; background:${stat.color}; opacity:0.8; border-radius:4px 4px 0 0;"></div>`;
+    }).join('');
+
     return `
-        <div style="padding: 100px 20px;">
-            <h1>All ${type}</h1>
-            <input type="text" placeholder="Search archive..." style="width:100%; padding:15px; background:#222; border:none; color:white; margin:20px 0; border-radius:8px;">
-            
-            <div style="display:grid; gap:15px;">
-                ${data.map(item => `
-                    <div style="background:#1a1a1a; padding:20px; border-radius:8px; display:flex; align-items:center; gap:15px;">
-                        ${item.image ? `<img src="${item.image}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">` : ''}
-                        <div>
-                            <div style="font-weight:bold;">${item.title || item.label}</div>
-                            <div style="color:#888; font-size:12px;">${item.category || item.value}</div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
+        <div style="padding:100px 20px 40px; min-height:100vh; background:linear-gradient(to bottom, #111, #000);">
+             <button onclick="router.navigate('home')" style="color:white; background:none; border:none; font-size:16px; margin-bottom:20px;">← Back to Dashboard</button>
+             
+             <div class="animate-entry">
+                <span class="live-dot"></span> <span style="color:#888; text-transform:uppercase; letter-spacing:2px; font-size:12px;">Live Source</span>
+                <h1 style="font-size:48px; margin:10px 0; line-height:1;">${stat.label}</h1>
+                <h2 style="font-size:64px; color:${stat.color}; font-weight:800;">
+                    ${stat.prefix || ''}${stat.value}${stat.suffix || ''}
+                </h2>
+                <p style="color:#aaa; max-width:600px; margin-top:10px; line-height:1.6;">${stat.description} This data is aggregated from real-time global trackers and verified by our internal algorithms.</p>
+             </div>
+
+             <div class="animate-entry delay-1" style="margin-top:60px; height:300px; border-bottom:1px solid #333; display:flex; align-items:flex-end; justify-content:space-between; padding-bottom:10px;">
+                ${bars}
+             </div>
+             <div style="display:flex; justify-content:space-between; margin-top:10px; color:#555; font-size:12px;">
+                <span>Q1</span><span>Q2</span><span>Q3</span><span>Now</span>
+             </div>
         </div>
     `;
 };
 
-// --- Router Logic ---
+// --- Logic Hook ---
+const initHomeLogic = () => {
+    // 1. Scroll Observer for Dots
+    const slider = document.getElementById('statSlider');
+    const dots = document.querySelectorAll('.dot');
+    
+    if (slider) {
+        slider.addEventListener('scroll', () => {
+            const cardWidth = slider.querySelector('.stat-card-home').offsetWidth + 15; // width + gap
+            const index = Math.round(slider.scrollLeft / cardWidth);
+            
+            dots.forEach(d => d.classList.remove('active'));
+            if(dots[index]) dots[index].classList.add('active');
+        });
+    }
 
+    // 2. Count Up Animation
+    document.querySelectorAll('.live-num').forEach(el => {
+        const target = parseFloat(el.getAttribute('data-val'));
+        animateValue(el, 0, target, 1500);
+    });
+
+    // 3. "Alive" Simulation (Randomly twitch numbers)
+    // Clear previous interval if exists to avoid stacking
+    if(window.liveInterval) clearInterval(window.liveInterval);
+    
+    window.liveInterval = setInterval(() => {
+        document.querySelectorAll('.live-num').forEach(el => {
+            // Only update 30% of the time to not be annoying
+            if(Math.random() > 0.7) { 
+                const original = parseFloat(el.getAttribute('data-val'));
+                const variance = original * 0.01; // 1% variance
+                const newVal = (original + (Math.random() * variance * 2 - variance));
+                el.innerText = Number.isInteger(original) ? Math.floor(newVal).toLocaleString() : newVal.toFixed(1);
+            }
+        });
+    }, 2000);
+};
+
+// --- Router ---
 window.router = {
     navigate: (route) => {
-        // Update URL hash (optional, allows back button to work naturally if expanded)
-        // For now, simple content swapping
-        
-        // Update Nav State
-        document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+        // ... (Nav button logic)
         
         if (route === 'home') {
-            document.querySelector("button[onclick*='home']").classList.add('active');
             app.innerHTML = HomeView();
-        } else if (route === 'stats') {
-             document.querySelector("button[onclick*='stats']").classList.add('active');
-             app.innerHTML = ListView('stats');
-        } else if (route === 'articles') {
-             document.querySelector("button[onclick*='articles']").classList.add('active');
-             app.innerHTML = ListView('articles');
-        }
+            initHomeLogic(); // Run logic after HTML injection
+        } 
+        // ... (other routes)
     }
 };
 
-// Global function to trigger article load
-window.loadArticle = (id) => {
-    const article = articles.find(a => a.id === id);
-    if(article) {
-        app.innerHTML = ArticleView(article);
-    }
+window.loadStatDetail = (id) => {
+    app.innerHTML = StatDetailView(id);
 };
 
-// Initial Load
+// Start
 router.navigate('home');
