@@ -19,6 +19,8 @@ const animateValue = (obj, start, end, duration) => {
 // --- Views ---
 const HomeView = () => {
     const hero = articles.find(a => a.isHero) || articles[0];
+    const heroTags = hero.tags || ["Breaking"];
+    const heroDate = hero.date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     // Stats Cards
     const statsHTML = globalStats.map((s, index) => `
@@ -53,10 +55,17 @@ const HomeView = () => {
     `).join('');
 
     return `
-        <div class="hero animate-entry" style="background-image: url('${hero.image}'); height:70vh; background-size:cover; display:flex; align-items:flex-end;">
-            <div class="hero-content" style="background:linear-gradient(to top, #000, transparent); width:100%; padding:30px 20px 80px;">
-                <span style="background:var(--accent-red); color:white; padding:4px 8px; font-weight:800; font-size:10px; text-transform:uppercase;">Breaking</span>
-                <h1 style="font-size:40px; margin-top:10px; line-height:1.05;">${hero.title}</h1>
+        <div class="hero animate-entry" style="background-image: url('${hero.image}'); background-size:cover;">
+            <div class="hero-overlay">
+                <div class="hero-tags">
+                    ${heroTags.map(tag => `<span class="hero-tag">${tag}</span>`).join('')}
+                </div>
+                <h1 class="hero-headline">${hero.title}</h1>
+                <div class="hero-meta">
+                    <span><div class="live-dot-hero"></div> Live</span>
+                    <span>${hero.category || 'General'}</span>
+                    <span>${heroDate}</span>
+                </div>
             </div>
         </div>
 
@@ -78,7 +87,7 @@ const HomeView = () => {
 };
 
 // --- Stat Detail View (unchanged) ---
-const StatDetailView = (id) => { /* your previous StatDetailView code */ };
+const StatDetailView = (id) => { /* previous code here */ };
 
 // --- Logic Hook ---
 const initHomeLogic = () => {
