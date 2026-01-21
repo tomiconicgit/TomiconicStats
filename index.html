@@ -2,50 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TOM Admin Panel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TOM Admin Studio</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- LOGIN SCREEN -->
-  <div id="login-screen" class="screen">
-    <h1>Admin Login</h1>
-    <input type="text" id="github-username" placeholder="GitHub Username">
-    <input type="password" id="github-token" placeholder="Personal Access Token">
-    <button id="login-btn">Login</button>
-    <p id="login-error" class="error"></p>
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="screen">
+  <h1>Admin Login</h1>
+  <input type="text" id="github-username" placeholder="GitHub Username">
+  <input type="password" id="github-token" placeholder="Personal Access Token">
+  <button id="login-btn">Login</button>
+  <p id="login-error" class="error"></p>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" class="screen hidden">
+
+  <header>
+    <h1>TOM Admin Studio</h1>
+    <button id="logout-btn">Logout</button>
+  </header>
+
+  <nav>
+    <button class="tab-btn active" data-tab="content-tab">Content</button>
+    <button class="tab-btn" data-tab="preview-tab">Live Preview</button>
+  </nav>
+
+  <!-- CONTENT TAB -->
+  <section id="content-tab" class="tab active">
+    <div class="controls">
+      <button id="add-content-btn">Add New Content</button>
+    </div>
+    <div id="content-list" class="list-container"></div>
+  </section>
+
+  <!-- LIVE PREVIEW TAB -->
+  <section id="preview-tab" class="tab">
+    <h2>Live Preview</h2>
+    <div id="preview-area"></div>
+  </section>
+
+</div>
+
+<!-- MODAL FOR NEW / EDIT CONTENT -->
+<div id="content-modal" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-panel">
+    <button id="modal-close">✕</button>
+    <h2 id="modal-title">Add Content</h2>
+
+    <form id="content-form">
+      <label>Content Type</label>
+      <select id="content-type">
+        <option value="stat-card">Stat Card</option>
+        <option value="image-card">Image Card</option>
+        <option value="video-card">Video Card</option>
+      </select>
+
+      <label>Title</label>
+      <input type="text" id="content-title" required>
+
+      <label>Summary</label>
+      <textarea id="content-summary"></textarea>
+
+      <label>Hero Section</label>
+      <input type="checkbox" id="content-hero">
+
+      <label>Rails (comma-separated)</label>
+      <input type="text" id="content-rails" placeholder="current-state, latest-statements">
+
+      <label>Labels (comma-separated)</label>
+      <input type="text" id="content-labels" placeholder="LIVE, TRACKER">
+
+      <label>Updated</label>
+      <input type="date" id="content-updated">
+
+      <!-- Stats section (only for stat-card) -->
+      <div id="stats-container">
+        <h3>Stats</h3>
+        <div id="stats-list-form"></div>
+        <button type="button" id="add-stat-btn">Add Stat</button>
+      </div>
+
+      <!-- Media section (for image/video cards) -->
+      <div id="media-container">
+        <label>Image URL</label>
+        <input type="text" id="content-image" placeholder="assets/example.jpg">
+        <label>Video URL</label>
+        <input type="text" id="content-video" placeholder="https://...">
+      </div>
+
+      <button type="submit" class="primary">Save Content</button>
+    </form>
   </div>
+</div>
 
-  <!-- ADMIN PANEL -->
-  <div id="admin-panel" class="screen hidden">
-
-    <header>
-      <h1>TOM Admin</h1>
-      <button id="logout-btn">Logout</button>
-    </header>
-
-    <nav>
-      <button class="tab-btn active" data-tab="stats-tab">Stats</button>
-      <button class="tab-btn" data-tab="articles-tab">Articles</button>
-    </nav>
-
-    <!-- STATS TAB -->
-    <section id="stats-tab" class="tab active">
-      <h2>Statistics</h2>
-      <button id="add-stat-btn">Add New Stat</button>
-      <div id="stats-list"></div>
-    </section>
-
-    <!-- ARTICLES TAB -->
-    <section id="articles-tab" class="tab">
-      <h2>Articles</h2>
-      <button id="add-article-btn">Add New Article</button>
-      <div id="articles-list"></div>
-    </section>
-
-  </div>
-
-  <script type="module" src="app.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
