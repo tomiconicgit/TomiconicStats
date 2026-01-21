@@ -1,6 +1,7 @@
 // app.js
 import { statsData, articlesData } from './data/stats.js';
 
+// --- DOM ELEMENTS ---
 const views = {
     dashboard: document.getElementById('dashboard'),
     statistics: document.getElementById('statistics'),
@@ -14,7 +15,9 @@ const containers = {
     articles: document.getElementById('articles-container')
 };
 
-// --- COMPONENTS ---
+const eventView = document.getElementById("eventView");
+
+// --- CREATE CARDS ---
 function createStatCard(stat, isHero = false) {
     const card = document.createElement('div');
     card.className = 'content-card';
@@ -55,23 +58,19 @@ function createArticleCard(article) {
     return card;
 }
 
-// --- RENDER ---
+// --- RENDER APP ---
 function renderApp() {
     // Hero
-    statsData.filter(s => s.critical).forEach(stat => {
-        containers.hero.appendChild(createStatCard(stat, true));
-    });
+    statsData.filter(s => s.critical).forEach(stat => containers.hero.appendChild(createStatCard(stat, true)));
     // Trending
-    statsData.filter(s => s.trending).forEach(stat => {
-        containers.trending.appendChild(createStatCard(stat));
-    });
-    // Full stats
+    statsData.filter(s => s.trending).forEach(stat => containers.trending.appendChild(createStatCard(stat)));
+    // Full Stats
     statsData.forEach(stat => containers.fullStats.appendChild(createStatCard(stat)));
     // Articles
     articlesData.forEach(article => containers.articles.appendChild(createArticleCard(article)));
 }
 
-// --- VIEW SWITCHING ---
+// --- VIEW SWITCH ---
 window.switchView = (viewName) => {
     Object.values(views).forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -82,8 +81,6 @@ window.switchView = (viewName) => {
 };
 
 // --- EVENT VIEW ---
-const eventView = document.getElementById("eventView");
-
 function openEvent(data) {
     document.getElementById("eventTag").innerText = data.tag;
     document.getElementById("eventTitle").innerText = data.title;
