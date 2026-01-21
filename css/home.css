@@ -1,71 +1,80 @@
 /* --- Hero Section --- */
-.hero {
-    height: 70vh;
-    width: 100%;
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: flex-end;
+.hero-container {
     position: relative;
+    width: 100%;
+    height: 70vh;
+    overflow: hidden;
 }
 
-.hero::after {
-    content: '';
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: slowZoom 20s linear infinite alternate;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}
+
+.hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, #000 10%, transparent 70%);
+    background: linear-gradient(to top, #000000 15%, transparent 60%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 30px 20px 60px;
 }
 
-.hero-content {
-    position: relative;
-    z-index: 2;
-    padding: 30px 20px 80px;
-    width: 100%;
-}
-
-.hero-title {
+.hero-headline {
     font-size: 38px;
     font-weight: 800;
     line-height: 1.1;
-    margin-top: 10px;
+    margin-top: 12px;
+    max-width: 90%;
 }
 
-/* --- HORIZONTAL SCROLLING UTILITY --- */
-.horizontal-slider {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 12px;
-    padding: 0 20px 20px;
-    -webkit-overflow-scrolling: touch;
-}
-
-.horizontal-slider::-webkit-scrollbar { display: none; }
-
-/* --- 1. Metrics Slider (Horizontal) --- */
-.metrics-container {
-    margin-top: -45px;
+/* --- Metrics Section --- */
+.metrics-section {
     position: relative;
+    margin-top: -40px; /* Overlap with hero */
     z-index: 10;
 }
 
+.stat-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 20px 25px;
+    gap: 15px;
+}
+
 .stat-card-home {
-    flex: 0 0 85vw; /* Large focus for stats */
+    flex: 0 0 88vw;
     scroll-snap-align: center;
     background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 22px;
+    border-radius: 24px;
     padding: 24px;
-    min-height: 160px;
+    transition: transform 0.3s ease;
 }
 
-@media (min-width: 768px) { .stat-card-home { flex: 0 0 350px; } }
+@media (min-width: 768px) {
+    .stat-card-home { flex: 0 0 350px; }
+}
 
+.stat-card-home:active {
+    transform: scale(0.98);
+}
+
+/* Pagination Dots */
 .dots-container {
     display: flex;
     justify-content: center;
-    gap: 6px;
-    margin-bottom: 25px;
+    gap: 8px;
+    padding-bottom: 30px;
 }
 
 .dot {
@@ -73,69 +82,81 @@
     height: 6px;
     background: #333;
     border-radius: 50%;
-    transition: 0.3s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .dot.active {
-    background: #fff;
-    transform: scale(1.3);
+    background: var(--text-primary);
+    transform: scale(1.5);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* --- 2. Articles Slider (Resized to match Stat Card feel) --- */
-.section-title {
+/* --- 16:9 Article Slider --- */
+.section-header {
     padding: 0 20px;
-    margin: 10px 0 15px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #888;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.article-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding: 0 20px 40px;
 }
 
 .article-preview-card {
-    flex: 0 0 260px; /* Reduced width to match "stat card" proportions */
+    flex: 0 0 82vw;
     aspect-ratio: 16 / 9;
     position: relative;
     border-radius: 16px;
     overflow: hidden;
-    scroll-snap-align: start;
-    border: 1px solid rgba(255,255,255,0.08);
+    scroll-snap-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (min-width: 768px) {
+    .article-preview-card { flex: 0 0 420px; }
 }
 
 .article-preview-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s ease;
 }
 
-.article-overlay {
+.article-preview-card:hover .article-preview-img {
+    transform: scale(1.05);
+}
+
+.article-preview-content {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
-    padding: 15px;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 70%);
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 }
 
-.article-label {
+.article-preview-label {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #457B9D; /* Brand Blue */
-    color: white;
-    padding: 3px 8px;
+    top: 15px;
+    left: 15px;
+    background: var(--accent-blue);
+    padding: 4px 10px;
     border-radius: 4px;
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
-    text-transform: uppercase;
 }
 
-.article-headline {
-    font-size: 14px;
-    font-weight: 600;
+.article-preview-headline {
+    font-size: 18px;
+    font-weight: 700;
     line-height: 1.3;
     color: white;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
