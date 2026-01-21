@@ -1,29 +1,42 @@
 export let githubAuth = { username: '', token: '' };
 
+// Validate login via GitHub API
 export async function testLogin(username, token) {
-  const res = await fetch('https://api.github.com/user', {
-    headers: { Authorization: `token ${token}` }
-  });
-  if (res.ok) { githubAuth.username = username; githubAuth.token = token; return true; }
-  else return false;
+  githubAuth.username = username;
+  githubAuth.token = token;
+  try {
+    const res = await fetch('https://api.github.com/user', {
+      headers: { Authorization: `token ${token}` }
+    });
+    return res.ok;
+  } catch (e) { return false; }
 }
 
-export async function pushContent(repo, path, content, branch='main') {
-  const url = `https://api.github.com/repos/${githubAuth.username}/${repo}/contents/${path}`;
+// Push content JSON to main site repo
+export async function pushContent(repo, path, content) {
+  const apiUrl = `https://api.github.com/repos/${githubAuth.username}/${repo}/contents/${path}`;
+  const message = `Deploy ${path}`;
+  const body = {
+    message,
+    content: btoa(JSON.stringify(content, null, 2)),
+  };
   
+  // Check if file exists to update
   let sha;
-  const getRes = await fetch(url, { headers: { Authorization: `token ${githubAuth.token}` } });
-  if (getRes.ok) { sha = (await getRes.json()).sha; }
+  try {
+    const res = await fetch(apiUrl, {
+      headers: { Authorization: `token ${githubAuth.token}` }
+    });
+    if(res.ok){
+      const data = await res.json();
+      sha = data.sha;
+      body.sha = sha;
+    }
+  } catch(e){}
 
-  const res = await fetch(url, {
+  await fetch(apiUrl, {
     method: 'PUT',
-    headers: { Authorization: `token ${githubAuth.token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      message: 'Admin Studio Content Update',
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
-      branch,
-      sha
-    })
+    headers: { Authorization: `token ${githubAuth.token}` },
+    body: JSON.stringify(body)
   });
-  return res.ok;
 }
