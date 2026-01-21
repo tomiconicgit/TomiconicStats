@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Ledger | Public Record</title>
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </head>
 <body>
 
+    <!-- APP CONTAINER -->
     <div class="app-container">
-        
+
+        <!-- HEADER -->
         <header style="margin-bottom: 30px; margin-top: 20px;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <div style="width: 12px; height: 12px; background: var(--danger); border-radius: 50%; box-shadow: 0 0 10px var(--danger);"></div>
@@ -19,15 +21,13 @@
             <h1 style="font-size: 1.5rem; margin-top: 5px;">State of Affairs</h1>
         </header>
 
+        <!-- DASHBOARD VIEWS -->
         <section id="dashboard" class="view-section active">
             <h2 class="label" style="margin-bottom: 15px;">Critical Updates</h2>
-            
-            <div class="hero-strip" id="hero-container">
-                </div>
+            <div class="hero-strip" id="hero-container"></div>
 
             <h2 class="label" style="margin-bottom: 15px;">Trending Proof</h2>
-            <div class="dashboard-grid" id="trending-container">
-                </div>
+            <div class="dashboard-grid" id="trending-container"></div>
         </section>
 
         <section id="statistics" class="view-section">
@@ -35,36 +35,57 @@
                 <h2 class="label">Full Database</h2>
                 <input type="text" placeholder="Search facts..." style="background: var(--bg-card); border: none; padding: 10px; border-radius: 8px; color: white;">
             </div>
-            <div class="dashboard-grid" id="full-stats-container">
-                </div>
+            <div class="dashboard-grid" id="full-stats-container"></div>
         </section>
 
         <section id="articles" class="view-section">
             <h2 class="label" style="margin-bottom: 20px;">Context & Evidence</h2>
-            <div class="dashboard-grid" id="articles-container">
-                </div>
+            <div class="dashboard-grid" id="articles-container"></div>
         </section>
 
     </div>
 
-    <div id="screenshot-stage">
-        <h1 id="shot-title" style="font-size: 4rem; margin-bottom: 20px;">TITLE</h1>
-        <div id="shot-value" style="font-size: 12rem; font-weight: 900; line-height: 1;">000</div>
-        <p id="shot-context" style="font-size: 1.5rem; color: #888; margin-top: 30px; max-width: 600px;">Context goes here</p>
-        <div style="margin-top: 50px; font-family: monospace;">THE LEDGER // PUBLIC RECORD</div>
-        <button onclick="exitScreenshotMode()" style="position: absolute; top: 20px; right: 20px; background: none; border: 1px solid #333; color: #333; padding: 10px;">CLOSE</button>
+    <!-- EVENT VIEW / OVERLAY -->
+    <div id="eventView" class="event-view hidden">
+        <div class="event-backdrop"></div>
+        <div class="event-panel">
+            <button class="event-close" onclick="closeEvent()">✕</button>
+            <div class="event-header">
+                <span class="event-tag" id="eventTag">IMMIGRATION</span>
+                <h1 id="eventTitle">Small Boat Crossings</h1>
+                <p class="event-summary" id="eventSummary">Live tracker monitoring daily Channel crossings in 2025.</p>
+            </div>
+            <div class="event-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Today</span>
+                    <span class="stat-value" id="statToday">847</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">This Year</span>
+                    <span class="stat-value" id="statYear">29,403</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Change (7d)</span>
+                    <span class="stat-value negative" id="statChange">+14%</span>
+                </div>
+            </div>
+            <div class="event-actions">
+                <button class="primary">Live Stats</button>
+                <button class="secondary">Generate Share Card</button>
+                <button class="secondary">Historical View</button>
+            </div>
+            <div class="event-meta">
+                <span>Source: Home Office</span>
+                <span>Last updated: 2 hours ago</span>
+            </div>
+        </div>
     </div>
 
+    <!-- NAVIGATION -->
     <nav class="nav-bar">
-        <a class="nav-item active" onclick="switchView('dashboard')">
-            <ion-icon name="grid-outline"></ion-icon>
-        </a>
-        <a class="nav-item" onclick="switchView('statistics')">
-            <ion-icon name="bar-chart-outline"></ion-icon>
-        </a>
-        <a class="nav-item" onclick="switchView('articles')">
-            <ion-icon name="document-text-outline"></ion-icon>
-        </a>
+        <a class="nav-item active" onclick="switchView('dashboard')"><ion-icon name="grid-outline"></ion-icon></a>
+        <a class="nav-item" onclick="switchView('statistics')"><ion-icon name="bar-chart-outline"></ion-icon></a>
+        <a class="nav-item" onclick="switchView('articles')"><ion-icon name="document-text-outline"></ion-icon></a>
     </nav>
 
     <script type="module" src="app.js"></script>
