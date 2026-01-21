@@ -1,0 +1,26 @@
+:root {
+    --bg-color: #050505;
+    --card-bg: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent: #e50914; /* Netflix red vibe, or change to Gold #D4AF37 */
+    --gradient-overlay: linear-gradient(to top, #050505 10%, transparent 100%);
+    --font-sans: 'Inter', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    padding-bottom: 40px;
+}
+
+h1, h2, h3 { letter-spacing: -0.02em; }
+
+/* Hide Scrollbar but keep functionality */
+.hide-scroll::-webkit-scrollbar { display: none; }
+.hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
