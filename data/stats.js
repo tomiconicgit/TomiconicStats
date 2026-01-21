@@ -1,73 +1,84 @@
-// data/stats.js
-
 export const statsData = [
-    {
-        id: "stat_001",
-        type: "counter", // logic: increments time
-        category: "silence",
-        title: "UK Government Silence",
-        value: "214",
-        unit: "Days",
-        context: "Since last official press briefing on housing crisis.",
-        source: "Hansard Records",
-        timestamp: "2023-10-27T10:00:00Z",
-        trending: true,
-        critical: true
-    },
-    {
-        id: "stat_002",
-        type: "static",
-        category: "action",
-        title: "Total Protests Logged",
-        value: "137",
-        unit: "Events",
-        context: "Verified gatherings across 12 major cities.",
-        source: "Local Police Reports / User Submissions",
-        timestamp: "2023-10-26T14:30:00Z",
-        trending: true,
-        critical: false
-    },
-    {
-        id: "stat_003",
-        type: "comparison",
-        category: "finance",
-        title: "Funding Disparity",
-        value: "£4.2bn",
-        unit: "Gap",
-        context: "Difference between promised vs. delivered infrastructure funds.",
-        source: "Treasury Q3 Report",
-        timestamp: "2023-10-25T09:00:00Z",
-        trending: false,
-        critical: true
-    },
-    {
-        id: "stat_004",
-        type: "timeline",
-        category: "policy",
-        title: "Bill Amendments",
-        value: "0",
-        unit: "Passed",
-        context: "Amendments accepted by opposition in current session.",
-        source: "Parliament TV",
-        timestamp: "2023-10-27T08:00:00Z",
-        trending: false,
-        critical: false
-    }
+  // HERO ITEM (The Big Headline)
+  {
+    id: "hero_01",
+    type: "hero",
+    category: "Immigration",
+    title: "“We will stop the boats”",
+    value: "+3,421",
+    unit: "Crossings",
+    context: "Since the Prime Minister's statement on Jan 4th.",
+    image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=2952&auto=format&fit=crop", // Dark moody sea
+    trend: "up", // up = bad in this context? or just up.
+    critical: true
+  },
+  // RAIL 1: SILENCE & INACTION
+  {
+    id: "stat_01",
+    category: "Silence",
+    title: "Housing Press Briefings",
+    value: "214",
+    unit: "Days Since Last",
+    context: "Government has not addressed housing publicly since Q3.",
+    trend: "flat",
+    critical: true
+  },
+  {
+    id: "stat_02",
+    category: "Inaction",
+    title: "Bill Amendments",
+    value: "0",
+    unit: "Accepted",
+    context: "Opposition amendments passed in current session.",
+    trend: "flat",
+    critical: false
+  },
+  {
+    id: "stat_03",
+    category: "Silence",
+    title: "FOI Requests",
+    value: "42%",
+    unit: "Rejected",
+    context: "Freedom of Information requests denied this month.",
+    trend: "up",
+    critical: true
+  },
+  // RAIL 2: PUBLIC ACTION
+  {
+    id: "stat_04",
+    category: "Resistance",
+    title: "Total Protests",
+    value: "137",
+    unit: "Events",
+    context: "Verified gatherings across 12 major cities.",
+    trend: "up",
+    critical: false
+  },
+  {
+    id: "stat_05",
+    category: "Resistance",
+    title: "Petitions Signed",
+    value: "2.4M",
+    unit: "Signatures",
+    context: "Total signatures on 'Accountability Act'.",
+    trend: "up",
+    critical: false
+  }
 ];
 
 export const articlesData = [
-    {
-        id: "art_001",
-        headline: "The Architecture of Silence",
-        summary: "Analyzing the 214-day gap in communication using the silence tracker.",
-        linkedStatId: "stat_001",
-        readTime: "3 min"
-    },
-    {
-        id: "art_002",
-        headline: "Follow the Money",
-        summary: "A deep dive into the £4.2bn funding gap.",
-        linkedStatId: "stat_003",
-        readTime: "5 min"
-    }
+  {
+    id: "art_01",
+    title: "The Architecture of Silence",
+    summary: "Why the 214-day gap in housing comms matters more than the budget.",
+    readTime: "3 min",
+    image: "https://images.unsplash.com/photo-1476242906366-d8eb64c2f661?q=80&w=2938&auto=format&fit=crop"
+  },
+  {
+    id: "art_02",
+    title: "Visualizing the Deficit",
+    summary: "A deep dive into the £4.2bn funding gap.",
+    readTime: "5 min",
+    image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2940&auto=format&fit=crop"
+  }
 ];
