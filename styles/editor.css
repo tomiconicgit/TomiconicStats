@@ -1,16 +1,21 @@
-/* METADATA FIELDS */
+/* =========================
+   ARTICLE EDITOR — MOBILE FIRST
+========================= */
+
+/* ---------- FORM FIELDS ---------- */
 
 input,
 select,
 textarea {
   width: 100%;
-  background: var(--panel-soft);
+  background: rgba(255,255,255,0.06);
   border: none;
-  border-radius: var(--radius-md);
-  padding: 12px 14px;
+  border-radius: 14px;
+  padding: 14px 16px;
   margin-bottom: 14px;
-  color: var(--text);
-  font-size: 14px;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.4;
 }
 
 textarea {
@@ -20,57 +25,180 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--muted);
+  color: #9a9aa0;
 }
 
-/* LABELS & TOGGLES */
+/* ---------- SECTION HEADERS ---------- */
+
+h2 {
+  margin-top: 28px;
+  margin-bottom: 12px;
+  font-size: 20px;
+}
+
+/* ---------- CHECKBOX / TOGGLES ---------- */
 
 label {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size: 14px;
-  color: var(--muted);
+  color: #9a9aa0;
   margin-bottom: 18px;
 }
 
 input[type="checkbox"] {
   width: auto;
+  transform: scale(1.1);
 }
 
-/* BLOCK CONTROLS */
+/* =========================
+   BLOCK ACTION BAR
+========================= */
 
-h2 {
-  margin-top: 32px;
-  font-size: 22px;
+.block-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
 }
 
-button {
+.block-actions button {
+  flex: 1;
+  min-height: 44px;
   background: rgba(255,255,255,0.12);
   border: none;
-  color: var(--text);
-  padding: 10px 16px;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.block-actions button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* =========================
+   BLOCK CONTAINER
+========================= */
+
+#blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+/* Shared block base */
+.block {
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+/* =========================
+   PARAGRAPH BLOCK
+========================= */
+
+.block textarea {
+  margin: 0;
+  background: rgba(255,255,255,0.08);
+}
+
+/* =========================
+   IMAGE BLOCK
+========================= */
+
+.image-block input[type="file"] {
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.image-preview {
+  height: 180px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #9a9aa0;
+  font-size: 13px;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* =========================
+   HIGHLIGHT / CALLOUT BLOCK
+========================= */
+
+.highlight-block textarea {
+  background: rgba(255,255,255,0.12);
+  border-left: 4px solid #ffffff;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+  background: rgba(255,255,255,0.14);
+  border: none;
+  color: #fff;
+  padding: 12px 18px;
   border-radius: 999px;
   font-size: 14px;
   cursor: pointer;
 }
 
 button:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.22);
 }
 
-#blocks {
-  margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
+/* =========================
+   PUBLISH BAR (MOBILE)
+========================= */
 
-/* PUBLISH BUTTON */
-
-button:last-of-type {
+.publish-bar {
   margin-top: 30px;
-  background: var(--accent);
+}
+
+.publish-bar button {
+  width: 100%;
+  background: #ffffff;
   color: #000;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px;
+}
+
+/* Sticky publish on mobile */
+@media (max-width: 768px) {
+  .publish-bar {
+    position: fixed;
+    bottom: 72px; /* above mobile nav */
+    left: 16px;
+    right: 16px;
+    z-index: 50;
+  }
+}
+
+/* =========================
+   DESKTOP ENHANCEMENTS
+========================= */
+
+@media (min-width: 1024px) {
+  .block-actions button {
+    flex: 0;
+  }
+
+  .image-preview {
+    height: 240px;
+  }
 }
