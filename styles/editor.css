@@ -1,34 +1,46 @@
 /* =========================
-   ARTICLE EDITOR — MOBILE FIRST
+   ARTICLE EDITOR
 ========================= */
 
-/* ---------- FORM FIELDS ---------- */
-
-input,
-select,
-textarea {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.06);
-  border: none;
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 14px;
-  color: #fff;
-  font-size: 15px;
-  line-height: 1.4;
+/* ---------- RESET / BASE ---------- */
+* {
+  box-sizing: border-box;
 }
 
-textarea {
-  min-height: 120px;
-  resize: vertical;
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
+  background: #0b0b0d;
+  color: #fff;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ---------- INPUTS ---------- */
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 15px;
 }
 
 input::placeholder,
-textarea::placeholder {
+select::placeholder {
   color: #9a9aa0;
 }
 
-/* ---------- SECTION HEADERS ---------- */
+/* ---------- HEADERS ---------- */
+h1 {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
 
 h2 {
   margin-top: 28px;
@@ -36,231 +48,169 @@ h2 {
   font-size: 20px;
 }
 
-/* ---------- BLOCK ACTION BAR ---------- */
+/* =========================
+   BLOCK CONTAINER
+========================= */
+#blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 20px;
+}
 
+.block {
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.toolbar button {
+  background: rgba(255,255,255,0.12);
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  transition: background 0.15s ease;
+}
+
+.toolbar button:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.toolbar input[type="color"] {
+  width: 32px;
+  height: 32px;
+  border: none;
+  padding: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* =========================
+   EDITABLE AREA
+========================= */
+.editable {
+  min-height: 120px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.5;
+  outline: none;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Highlight support (via execCommand hiliteColor) */
+.editable ::selection {
+  background: #ffe600; /* Default selection */
+}
+
+/* =========================
+   BLOCK ACTIONS
+========================= */
 .block-actions {
   display: flex;
   gap: 10px;
-  margin-bottom: 18px;
+  align-items: center;
   flex-wrap: wrap;
 }
 
 .block-actions button {
-  flex: 1;
-  min-height: 44px;
-  background: rgba(255, 255, 255, 0.12);
+  flex: 0;
+  min-height: 36px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
   border: none;
   color: #fff;
-  border-radius: 999px;
   font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.15s ease;
 }
 
 .block-actions button:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255,255,255,0.22);
 }
 
-/* =========================
-   BLOCK CONTAINER
-========================= */
-
-#blocks {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  margin-top: 10px;
+.block-actions .edit-btn,
+.block-actions .override-btn {
+  background: rgba(255,255,255,0.18);
 }
 
-/* Shared block base */
-.block {
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 16px;
-  padding: 14px;
-  position: relative;
-  transition: background 0.2s ease;
-}
-
-/* =========================
-   PARAGRAPH BLOCK
-========================= */
-
-.paragraph-block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.paragraph-block .editable {
-  min-height: 100px;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 12px;
-  border-radius: 12px;
-  outline: none;
-  color: #fff;
-  font-size: 15px;
-}
-
-.paragraph-block .editable[contenteditable="true"]:focus {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* Highlighted words inside editable */
-.paragraph-block .editable span {
-  background-color: yellow;
-  color: #000;
-}
-
-/* =========================
-   BLOCK TOOLS
-========================= */
-
-.block-tools {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.block-tools button {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.block-tools button:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
-
-.block-tools .hidden {
+.block-actions .hidden {
   display: none;
 }
 
-/* Spellcheck warning */
-.block-tools .spell-error {
-  color: #ff4d4f;
+.spell-error {
   font-size: 12px;
-}
-
-.block-tools .spell-error.visible {
-  display: inline;
-}
-
-.override-btn {
-  background: #ffbb33;
-  color: #000;
-}
-
-/* =========================
-   IMAGE BLOCK
-========================= */
-
-.image-block input[type="file"] {
-  font-size: 13px;
-  margin-bottom: 10px;
-}
-
-.image-preview {
-  height: 180px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  color: #9a9aa0;
-  font-size: 13px;
-}
-
-.image-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* =========================
-   HIGHLIGHT / CALLOUT BLOCK
-========================= */
-
-.highlight-block textarea {
-  background: rgba(255, 255, 255, 0.12);
-  border-left: 4px solid #ffffff;
+  color: #ff4d4f;
   font-weight: 500;
-  font-size: 15px;
 }
 
 /* =========================
-   BUTTONS
+   HIGHLIGHTED / FORMATTED TEXT
 ========================= */
-
-button {
-  background: rgba(255, 255, 255, 0.14);
-  border: none;
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 999px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.editable b, .editable strong {
+  font-weight: bold;
 }
 
-button:hover {
-  background: rgba(255, 255, 255, 0.22);
+.editable i, .editable em {
+  font-style: italic;
+}
+
+.editable u {
+  text-decoration: underline;
+}
+
+.editable s, .editable strike {
+  text-decoration: line-through;
+}
+
+.editable blockquote {
+  border-left: 3px solid #fff;
+  padding-left: 12px;
+  margin-left: 0;
+  color: #d0d0d0;
+  font-style: italic;
+}
+
+/* Ordered / unordered lists */
+.editable ul,
+.editable ol {
+  margin-left: 20px;
 }
 
 /* =========================
-   PUBLISH BAR (MOBILE)
+   RESPONSIVE
 ========================= */
-
-.publish-bar {
-  margin-top: 30px;
-}
-
-.publish-bar button {
-  width: 100%;
-  background: #ffffff;
-  color: #000;
-  font-weight: 600;
-  font-size: 15px;
-  padding: 14px;
-}
-
-/* Sticky publish on mobile */
 @media (max-width: 768px) {
-  .publish-bar {
-    position: fixed;
-    bottom: 72px; /* above mobile nav */
-    left: 16px;
-    right: 16px;
-    z-index: 50;
+  .toolbar {
+    gap: 4px;
   }
-}
 
-/* =========================
-   DESKTOP ENHANCEMENTS
-========================= */
+  .toolbar button {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
 
-@media (min-width: 1024px) {
   .block-actions button {
-    flex: 0;
-  }
-
-  .editable {
-    min-height: 140px;
-    font-size: 16px;
-  }
-
-  .image-preview {
-    height: 240px;
-  }
-
-  .publish-bar {
-    position: static;
-    width: auto;
+    font-size: 13px;
+    padding: 6px 12px;
   }
 }
