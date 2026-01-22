@@ -39,181 +39,143 @@ function renderEditor() {
     </label>
 
     <h2>Content</h2>
-    <div class="block-actions">
-      <button onclick="addParagraph()">+ Paragraph</button>
-      <button onclick="generateParagraphAI()">🎯 Generate AI Paragraph</button>
-    </div>
+    <button onclick="addParagraph()">+ Paragraph</button>
 
     <div id="blocks"></div>
 
-    <div class="publish-bar">
-      <button onclick="publish()">Publish</button>
-    </div>
+    <button onclick="publish()">Publish</button>
   `;
 }
 
 /* =========================
-   PARAGRAPH BLOCK
+   ADD PARAGRAPH BLOCK
 ========================= */
-function addParagraph(content = "") {
-  const id = Date.now();
+function addParagraph() {
   const blockIndex = article.blocks.length;
-  article.blocks.push({ type: "paragraph", content: content });
+  article.blocks.push({ type: "paragraph", content: "" });
 
-  const blocks = document.getElementById("blocks");
-  const blockDiv = document.createElement("div");
-  blockDiv.className = "block paragraph-block";
-  blockDiv.dataset.index = blockIndex;
+  const blockContainer = document.createElement("div");
+  blockContainer.className = "block paragraph-block";
 
-  blockDiv.innerHTML = `
-    <div contenteditable="true" class="editable">${content}</div>
-    <div class="block-tools">
-      <button class="highlight-toggle">Highlight</button>
-      <button class="done-btn">Done</button>
-      <button class="edit-btn hidden">Edit</button>
-      <span class="spell-error hidden">⚠ Spelling issues!</span>
-      <button class="override-btn hidden">Override</button>
+  blockContainer.innerHTML = `
+    <div class="toolbar">
+      <button onclick="formatText('bold')"><b>B</b></button>
+      <button onclick="formatText('italic')"><i>I</i></button>
+      <button onclick="formatText('underline')"><u>U</u></button>
+      <button onclick="formatText('strikeThrough')">S</button>
+      <button onclick="formatText('insertOrderedList')">OL</button>
+      <button onclick="formatText('insertUnorderedList')">UL</button>
+      <button onclick="formatText('formatBlock', 'BLOCKQUOTE')">❝</button>
+      <input type="color" onchange="formatText('foreColor', this.value)" title="Text color">
+      <input type="color" onchange="formatText('hiliteColor', this.value)" title="Highlight color">
+      <button onclick="undo()">↺</button>
+      <button onclick="redo()">↻</button>
+      <button onclick="insertLink()">🔗</button>
+    </div>
+
+    <div contenteditable="true" class="editable" spellcheck="true"></div>
+    <div class="block-actions">
+      <button onclick="finishBlock(${blockIndex}, this)">Done</button>
+      <button class="edit-btn hidden" onclick="editBlock(${blockIndex}, this)">Edit</button>
+      <span class="spell-error hidden">Spelling errors detected</span>
+      <button class="override-btn hidden" onclick="overrideSpell(${blockIndex}, this)">Override</button>
     </div>
   `;
 
-  blocks.appendChild(blockDiv);
-
-  const editable = blockDiv.querySelector(".editable");
-  const highlightBtn = blockDiv.querySelector(".highlight-toggle");
-  const doneBtn = blockDiv.querySelector(".done-btn");
-  const editBtn = blockDiv.querySelector(".edit-btn");
-  const spellError = blockDiv.querySelector(".spell-error");
-  const overrideBtn = blockDiv.querySelector(".override-btn");
-
-  let highlightMode = false;
-  let overrideSpell = false;
-
-  /* =========================
-     HIGHLIGHT TOGGLE
-  ========================= */
-  highlightBtn.addEventListener("click", () => {
-    highlightMode = !highlightMode;
-    highlightBtn.style.background = highlightMode ? "#fff3" : "transparent";
-  });
-
-  editable.addEventListener("input", () => {
-    const sel = window.getSelection();
-    if (highlightMode && sel.rangeCount > 0) {
-      const range = sel.getRangeAt(0);
-      const span = document.createElement("span");
-      span.style.backgroundColor = "yellow";
-      range.surroundContents(span);
-      sel.removeAllRanges();
-    }
-    // Update live content
-    article.blocks[blockIndex].content = editable.innerHTML;
-    runSpellcheck(editable, spellError);
-  });
-
-  /* =========================
-     DONE / EDIT
-  ========================= */
-  doneBtn.addEventListener("click", () => {
-    if (spellError.classList.contains("visible") && !overrideSpell) {
-      alert("Please fix spelling issues or override.");
-      return;
-    }
-    editable.contentEditable = "false";
-    doneBtn.classList.add("hidden");
-    editBtn.classList.remove("hidden");
-  });
-
-  editBtn.addEventListener("click", () => {
-    editable.contentEditable = "true";
-    editBtn.classList.add("hidden");
-    doneBtn.classList.remove("hidden");
-  });
-
-  overrideBtn.addEventListener("click", () => {
-    overrideSpell = true;
-    spellError.classList.add("hidden");
-  });
+  document.getElementById("blocks").appendChild(blockContainer);
+  blockContainer.querySelector(".editable").focus();
 }
 
 /* =========================
-   AI GENERATED PARAGRAPH
+   FORMAT TEXT
 ========================= */
-async function generateParagraphAI() {
-  const prompt = promptInput("Enter prompt for AI paragraph:");
-
-  if (!prompt) return;
-
-  const loader = addTemporaryLoader();
-  try {
-    const generated = await callAI(prompt); // Placeholder function
-    addParagraph(generated);
-  } catch (err) {
-    alert("AI generation failed: " + err.message);
-  } finally {
-    removeTemporaryLoader(loader);
-  }
+function formatText(command, value = null) {
+  document.execCommand(command, false, value);
 }
 
 /* =========================
-   SPELLCHECK FUNCTION
+   UNDO / REDO
 ========================= */
-function runSpellcheck(editable, spellError) {
-  const text = editable.innerText;
-  const words = text.split(/\s+/);
-  let errors = false;
+function undo() {
+  document.execCommand("undo");
+}
 
-  words.forEach(word => {
-    if (!spellCorrect(word)) {
-      errors = true;
-    }
-  });
+function redo() {
+  document.execCommand("redo");
+}
 
-  if (errors) {
-    spellError.classList.remove("hidden");
-    spellError.classList.add("visible");
+/* =========================
+   INSERT LINK
+========================= */
+function insertLink() {
+  const url = prompt("Enter URL:");
+  if (url) document.execCommand("createLink", false, url);
+}
+
+/* =========================
+   SPELLCHECK
+========================= */
+function dictionaryCheck(word) {
+  return /^[a-zA-Z0-9’'-]+$/.test(word); 
+}
+
+function validateSpelling(index) {
+  const editable = document.querySelectorAll(".editable")[index];
+  const errorSpan = editable.parentElement.querySelector(".spell-error");
+  const overrideBtn = editable.parentElement.querySelector(".override-btn");
+
+  const words = editable.innerText.split(/\s+/);
+  const wrongWords = words.filter(w => !dictionaryCheck(w));
+
+  if (wrongWords.length > 0) {
+    errorSpan.classList.remove("hidden");
+    overrideBtn.classList.remove("hidden");
+    return false;
   } else {
-    spellError.classList.remove("visible");
-    spellError.classList.add("hidden");
+    errorSpan.classList.add("hidden");
+    overrideBtn.classList.add("hidden");
+    return true;
   }
 }
 
-// VERY basic spellcheck demo; replace with real dictionary
-function spellCorrect(word) {
-  const ignore = ["AI", "UK", "US"]; // exceptions
-  if (ignore.includes(word)) return true;
-  return /^[a-zA-Z0-9.,'’\-]+$/.test(word);
+function overrideSpell(index, btn) {
+  const errorSpan = btn.parentElement.querySelector(".spell-error");
+  errorSpan.classList.add("hidden");
+  btn.classList.add("hidden");
 }
 
 /* =========================
-   TEMP LOADER
+   FINISH / EDIT BLOCK
 ========================= */
-function addTemporaryLoader() {
-  const loader = document.createElement("div");
-  loader.innerText = "Generating...";
-  loader.style.padding = "12px";
-  loader.style.color = "#fff";
-  document.getElementById("blocks").appendChild(loader);
-  return loader;
+function finishBlock(index, btn) {
+  if (!validateSpelling(index)) {
+    alert("Fix spelling errors or override to continue.");
+    return;
+  }
+
+  btn.classList.add("hidden");
+  const editBtn = btn.parentElement.querySelector(".edit-btn");
+  editBtn.classList.remove("hidden");
+
+  const editable = document.querySelectorAll(".editable")[index];
+  editable.contentEditable = "false";
+
+  // save HTML
+  article.blocks[index].content = editable.innerHTML;
 }
 
-function removeTemporaryLoader(loader) {
-  loader.remove();
+function editBlock(index, btn) {
+  btn.classList.add("hidden");
+  const doneBtn = btn.parentElement.querySelector("button:not(.edit-btn)");
+  doneBtn.classList.remove("hidden");
+
+  const editable = document.querySelectorAll(".editable")[index];
+  editable.contentEditable = "true";
+  editable.focus();
 }
 
 /* =========================
-   FAKE AI CALL (replace with real API)
-========================= */
-async function callAI(prompt) {
-  // Simulate API delay
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve("AI generated paragraph based on prompt: " + prompt);
-    }, 1500);
-  });
-}
-
-/* =========================
-   PUBLISH
+   PUBLISH ARTICLE TO GITHUB
 ========================= */
 async function publish() {
   const user = sessionStorage.getItem("ghUser");
@@ -254,3 +216,8 @@ async function publish() {
 
   alert("Published successfully");
 }
+
+/* =========================
+   INIT
+========================= */
+renderEditor();
