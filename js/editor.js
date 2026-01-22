@@ -9,6 +9,14 @@ let article = {
   blocks: []
 };
 
+// Simple dictionary for spellcheck demo
+const dictionary = ["the","and","to","of","in","for","with","on","this","that","is","are","has","have","be","it","as","at","from"];
+
+function isWordCorrect(word) {
+  if (!word) return true;
+  return dictionary.includes(word.toLowerCase());
+}
+
 function renderEditor() {
   app.innerHTML = `
     <h1>New Article</h1>
@@ -36,82 +44,117 @@ function renderEditor() {
     </label>
 
     <h2>Content</h2>
-
-    <div class="block-actions">
-      <button onclick="addParagraph()">+ Paragraph</button>
-      <button onclick="addHighlight()">+ Highlight</button>
-      <button onclick="addImage()">+ Image</button>
-    </div>
+    <button onclick="addParagraph()">+ Paragraph</button>
 
     <div id="blocks"></div>
 
-    <div class="publish-bar">
-      <button onclick="publish()">Publish</button>
-    </div>
+    <button onclick="publish()">Publish Article</button>
   `;
+
+  // Render existing blocks if any
+  article.blocks.forEach((block, idx) => {
+    renderParagraphBlock(block, idx);
+  });
 }
 
-/* ---------- ADD BLOCK FUNCTIONS ---------- */
 function addParagraph() {
-  article.blocks.push({ type: "paragraph", content: "" });
-  const idx = article.blocks.length - 1;
-
-  const container = document.getElementById("blocks");
-  const textarea = document.createElement("textarea");
-  textarea.placeholder = "Paragraph...";
-  textarea.oninput = e => article.blocks[idx].content = e.target.value;
-  container.appendChild(textarea);
+  const block = {
+    type: "paragraph",
+    content: "",
+    highlights: []
+  };
+  article.blocks.push(block);
+  renderParagraphBlock(block, article.blocks.length - 1);
 }
 
-function addHighlight() {
-  article.blocks.push({ type: "highlight", content: "" });
-  const idx = article.blocks.length - 1;
-
-  const container = document.getElementById("blocks");
-  const textarea = document.createElement("textarea");
-  textarea.placeholder = "Highlight...";
-  textarea.oninput = e => article.blocks[idx].content = e.target.value;
-  textarea.style.background = "rgba(255,255,255,0.12)";
-  textarea.style.borderLeft = "4px solid #fff";
-  textarea.style.fontWeight = "500";
-  container.appendChild(textarea);
-}
-
-function addImage() {
-  article.blocks.push({ type: "image", src: "", caption: "" });
-  const idx = article.blocks.length - 1;
-
+function renderParagraphBlock(block, index) {
   const container = document.getElementById("blocks");
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "image-block";
+  const blockEl = document.createElement("div");
+  blockEl.className = "paragraph-block block";
+  blockEl.dataset.index = index;
 
-  const fileInput = document.createElement("input");
-  fileInput.type = "file";
-  fileInput.accept = "image/*";
-  fileInput.onchange = e => {
-    const file = e.target.files[0];
-    if (!file) return;
+  blockEl.innerHTML = `
+    <div class="editor-toolbar">
+      <button type="button" class="highlight-toggle">Highlight</button>
+      <button type="button" class="done-btn">Done</button>
+      <button type="button" class="override-btn">Override Spellcheck</button>
+      <span class="spell-warning"></span>
+    </div>
+    <div class="editor-content" contenteditable="true" spellcheck="true">${block.content}</div>
+  `;
 
-    const reader = new FileReader();
-    reader.onload = ev => {
-      wrapper.querySelector(".image-preview img").src = ev.target.result;
-      article.blocks[idx].src = ev.target.result; // store base64 for now
-    };
-    reader.readAsDataURL(file);
+  container.appendChild(blockEl);
+
+  const editor = blockEl.querySelector(".editor-content");
+  const highlightBtn = blockEl.querySelector(".highlight-toggle");
+  const doneBtn = blockEl.querySelector(".done-btn");
+  const overrideBtn = blockEl.querySelector(".override-btn");
+  const warningEl = blockEl.querySelector(".spell-warning");
+
+  let highlightMode = false;
+  let overrideSpell = false;
+
+  highlightBtn.onclick = () => {
+    highlightMode = !highlightMode;
+    highlightBtn.style.background = highlightMode ? "yellow" : "";
   };
 
-  const preview = document.createElement("div");
-  preview.className = "image-preview";
-  preview.innerHTML = `<img src="" alt="Preview">`;
+  editor.addEventListener("input", () => {
+    // Wrap new words in highlight span if highlightMode
+    if (highlightMode) {
+      wrapCurrentWord(editor);
+    }
 
-  const caption = document.createElement("input");
-  caption.type = "text";
-  caption.placeholder = "Caption (optional)";
-  caption.oninput = e => article.blocks[idx].caption = e.target.value;
+    block.content = editor.innerHTML;
 
-  wrapper.appendChild(fileInput);
-  wrapper.appendChild(preview);
-  wrapper.appendChild(caption);
-  container.appendChild(wrapper);
+    // Spellcheck
+    const text = editor.innerText;
+    const words = text.split(/\s+/);
+    const misspelled = words.filter(word => !isWordCorrect(word));
+    if (misspelled.length && !overrideSpell) {
+      warningEl.innerText = `Misspelled: ${misspelled.join(", ")}`;
+      doneBtn.disabled = true;
+    } else {
+      warningEl.innerText = "";
+      doneBtn.disabled = false;
+    }
+  });
+
+  overrideBtn.onclick = () => {
+    overrideSpell = true;
+    warningEl.innerText = "Spellcheck overridden.";
+    doneBtn.disabled = false;
+  };
+
+  doneBtn.onclick = () => {
+    block.content = editor.innerHTML;
+    alert("Paragraph saved!");
+  };
+}
+
+// Helper: Wrap the current word in highlight span
+function wrapCurrentWord(editor) {
+  const selection = window.getSelection();
+  if (!selection.rangeCount) return;
+
+  const range = selection.getRangeAt(0);
+  const wordRange = range.cloneRange();
+  wordRange.expand("word");
+  const wordText = wordRange.toString();
+
+  if (!wordText.trim()) return;
+
+  const span = document.createElement("span");
+  span.className = "highlight";
+  span.textContent = wordText;
+
+  wordRange.deleteContents();
+  wordRange.insertNode(span);
+
+  // Move caret to end
+  range.setStartAfter(span);
+  range.collapse(true);
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
