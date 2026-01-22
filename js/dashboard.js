@@ -1,13 +1,29 @@
 function renderDashboard() {
   app.innerHTML = `
-    <h1>Dashboard</h1>
+    <section class="home-hero">
+      <h1>Command Centre</h1>
+      <p>Create, publish, and control everything.</p>
+    </section>
 
-    <div class="stats-grid">
-      <div class="stat">Articles<br><strong>—</strong></div>
-      <div class="stat">Views<br><strong>—</strong></div>
-      <div class="stat">Clicks<br><strong>—</strong></div>
-    </div>
+    <section class="home-actions">
 
-    <p>Phase 1: Article publishing enabled</p>
+      <div class="action-card primary" onclick="route('editor')">
+        <h2>New Article</h2>
+        <p>Write and publish a story</p>
+      </div>
+
+      <div class="action-card disabled">
+        <h2>Analytics</h2>
+        <p>Views, engagement, regions</p>
+        <span class="badge">Soon</span>
+      </div>
+
+      <div class="action-card disabled">
+        <h2>Statistics Library</h2>
+        <p>Live data, trackers, embeds</p>
+        <span class="badge">Next</span>
+      </div>
+
+    </section>
   `;
 }
