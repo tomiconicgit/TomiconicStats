@@ -3,7 +3,6 @@
 ========================= */
 
 /* ---------- FORM FIELDS ---------- */
-
 input,
 select,
 textarea {
@@ -29,15 +28,20 @@ textarea::placeholder {
 }
 
 /* ---------- SECTION HEADERS ---------- */
+h1 {
+  font-size: 28px;
+  margin-bottom: 18px;
+}
 
 h2 {
   margin-top: 28px;
   margin-bottom: 12px;
   font-size: 20px;
+  font-weight: 600;
+  color: #fff;
 }
 
 /* ---------- CHECKBOX / TOGGLES ---------- */
-
 label {
   display: flex;
   align-items: center;
@@ -55,7 +59,6 @@ input[type="checkbox"] {
 /* =========================
    BLOCK ACTION BAR
 ========================= */
-
 .block-actions {
   display: flex;
   gap: 10px;
@@ -81,7 +84,6 @@ input[type="checkbox"] {
 /* =========================
    BLOCK CONTAINER
 ========================= */
-
 #blocks {
   display: flex;
   flex-direction: column;
@@ -99,16 +101,29 @@ input[type="checkbox"] {
 /* =========================
    PARAGRAPH BLOCK
 ========================= */
-
 .block textarea {
   margin: 0;
   background: rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: #fff;
+}
+
+/* =========================
+   HIGHLIGHT / CALLOUT BLOCK
+========================= */
+.highlight-block textarea {
+  background: rgba(255,255,255,0.12);
+  border-left: 4px solid #ffffff;
+  font-weight: 500;
+  font-size: 15px;
+  padding: 12px 14px;
+  border-radius: 12px;
 }
 
 /* =========================
    IMAGE BLOCK
 ========================= */
-
 .image-block input[type="file"] {
   font-size: 13px;
   margin-bottom: 10px;
@@ -124,6 +139,7 @@ input[type="checkbox"] {
   overflow: hidden;
   color: #9a9aa0;
   font-size: 13px;
+  margin-bottom: 8px;
 }
 
 .image-preview img {
@@ -132,21 +148,18 @@ input[type="checkbox"] {
   object-fit: cover;
 }
 
-/* =========================
-   HIGHLIGHT / CALLOUT BLOCK
-========================= */
-
-.highlight-block textarea {
-  background: rgba(255,255,255,0.12);
-  border-left: 4px solid #ffffff;
-  font-weight: 500;
-  font-size: 15px;
+.image-block input[type="text"] {
+  padding: 10px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 14px;
 }
 
 /* =========================
    BUTTONS
 ========================= */
-
 button {
   background: rgba(255,255,255,0.14);
   border: none;
@@ -164,7 +177,6 @@ button:hover {
 /* =========================
    PUBLISH BAR (MOBILE)
 ========================= */
-
 .publish-bar {
   margin-top: 30px;
 }
@@ -176,6 +188,7 @@ button:hover {
   font-weight: 600;
   font-size: 15px;
   padding: 14px;
+  border-radius: 999px;
 }
 
 /* Sticky publish on mobile */
@@ -192,7 +205,6 @@ button:hover {
 /* =========================
    DESKTOP ENHANCEMENTS
 ========================= */
-
 @media (min-width: 1024px) {
   .block-actions button {
     flex: 0;
@@ -200,5 +212,17 @@ button:hover {
 
   .image-preview {
     height: 240px;
+  }
+
+  input, textarea, select {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  h2 {
+    font-size: 22px;
   }
 }
