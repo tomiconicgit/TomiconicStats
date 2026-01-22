@@ -1,20 +1,26 @@
 /* =========================
-   MOBILE-FIRST LAYOUT
+   DASHBOARD LAYOUT — MOBILE FIRST
 ========================= */
 
 body {
+  display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Sidebar becomes bottom nav on mobile */
+/* =========================
+   NAVIGATION
+========================= */
+
 .sidebar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 64px;
-  width: 100%;
-  flex-direction: row;
+  background: rgba(14,14,18,0.92);
+  backdrop-filter: blur(22px);
+  display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 0 12px;
@@ -26,15 +32,104 @@ body {
 }
 
 .sidebar button {
-  text-align: center;
+  background: none;
+  border: none;
+  color: #9a9aa0;
   font-size: 13px;
-  padding: 8px 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-/* Main content spacing */
+.sidebar button:hover {
+  color: #fff;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
 main {
+  flex: 1;
   padding: 20px;
-  padding-bottom: 96px; /* space for bottom nav */
+  padding-bottom: 96px;
+}
+
+/* =========================
+   COMMAND CENTRE
+========================= */
+
+.home-hero {
+  margin-bottom: 28px;
+}
+
+.home-hero h1 {
+  font-size: 34px;
+  margin-bottom: 6px;
+}
+
+.home-hero p {
+  color: #9a9aa0;
+  font-size: 15px;
+}
+
+/* ACTION GRID */
+
+.home-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+/* ACTION CARDS */
+
+.action-card {
+  position: relative;
+  background: rgba(255,255,255,0.06);
+  border-radius: 22px;
+  padding: 22px;
+  min-height: 120px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.action-card:hover {
+  transform: scale(1.02);
+  background: rgba(255,255,255,0.12);
+}
+
+.action-card.primary {
+  background: rgba(255,255,255,0.12);
+}
+
+.action-card.disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.action-card h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.action-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #9a9aa0;
+}
+
+/* BADGES */
+
+.badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #000;
+  background: #fff;
+  padding: 4px 8px;
+  border-radius: 999px;
 }
 
 /* =========================
@@ -57,9 +152,20 @@ main {
 
   .sidebar h2 {
     display: block;
+    margin-bottom: 24px;
+    font-size: 20px;
+  }
+
+  .sidebar button {
+    text-align: left;
+    font-size: 14px;
   }
 
   main {
     padding: 40px;
+  }
+
+  .home-actions {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
