@@ -35,11 +35,12 @@ function renderEditor() {
       Push to main hero
     </label>
 
-    <h2>Content Blocks</h2>
+    <h2>Content</h2>
+
     <div class="block-actions">
       <button onclick="addParagraph()">+ Paragraph</button>
       <button onclick="addHighlight()">+ Highlight</button>
-      <button onclick="addImage()">+ Image (Placeholder)</button>
+      <button onclick="addImage()">+ Image</button>
     </div>
 
     <div id="blocks"></div>
@@ -48,62 +49,69 @@ function renderEditor() {
       <button onclick="publish()">Publish</button>
     </div>
   `;
-
-  // Render existing blocks if any
-  renderBlocks();
 }
 
-function renderBlocks() {
-  const container = document.getElementById("blocks");
-  container.innerHTML = "";
-
-  article.blocks.forEach((block, index) => {
-    let el;
-    if (block.type === "paragraph") {
-      el = document.createElement("textarea");
-      el.placeholder = "Paragraph...";
-      el.value = block.content;
-      el.oninput = (e) => (article.blocks[index].content = e.target.value);
-    }
-
-    if (block.type === "highlight") {
-      el = document.createElement("textarea");
-      el.placeholder = "Highlight / Callout...";
-      el.value = block.content;
-      el.className = "highlight-block";
-      el.oninput = (e) => (article.blocks[index].content = e.target.value);
-    }
-
-    if (block.type === "image") {
-      el = document.createElement("div");
-      el.className = "image-block";
-      el.innerHTML = `
-        <input type="text" placeholder="Image URL" value="${block.src || ""}" 
-          oninput="article.blocks[${index}].src=this.value">
-        <input type="text" placeholder="Caption" value="${block.caption || ""}"
-          oninput="article.blocks[${index}].caption=this.value">
-      `;
-    }
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "block";
-    wrapper.appendChild(el);
-    container.appendChild(wrapper);
-  });
-}
-
-// Block adders
+/* ---------- ADD BLOCK FUNCTIONS ---------- */
 function addParagraph() {
   article.blocks.push({ type: "paragraph", content: "" });
-  renderBlocks();
+  const idx = article.blocks.length - 1;
+
+  const container = document.getElementById("blocks");
+  const textarea = document.createElement("textarea");
+  textarea.placeholder = "Paragraph...";
+  textarea.oninput = e => article.blocks[idx].content = e.target.value;
+  container.appendChild(textarea);
 }
 
 function addHighlight() {
   article.blocks.push({ type: "highlight", content: "" });
-  renderBlocks();
+  const idx = article.blocks.length - 1;
+
+  const container = document.getElementById("blocks");
+  const textarea = document.createElement("textarea");
+  textarea.placeholder = "Highlight...";
+  textarea.oninput = e => article.blocks[idx].content = e.target.value;
+  textarea.style.background = "rgba(255,255,255,0.12)";
+  textarea.style.borderLeft = "4px solid #fff";
+  textarea.style.fontWeight = "500";
+  container.appendChild(textarea);
 }
 
 function addImage() {
   article.blocks.push({ type: "image", src: "", caption: "" });
-  renderBlocks();
+  const idx = article.blocks.length - 1;
+
+  const container = document.getElementById("blocks");
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "image-block";
+
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+  fileInput.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = ev => {
+      wrapper.querySelector(".image-preview img").src = ev.target.result;
+      article.blocks[idx].src = ev.target.result; // store base64 for now
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const preview = document.createElement("div");
+  preview.className = "image-preview";
+  preview.innerHTML = `<img src="" alt="Preview">`;
+
+  const caption = document.createElement("input");
+  caption.type = "text";
+  caption.placeholder = "Caption (optional)";
+  caption.oninput = e => article.blocks[idx].caption = e.target.value;
+
+  wrapper.appendChild(fileInput);
+  wrapper.appendChild(preview);
+  wrapper.appendChild(caption);
+  container.appendChild(wrapper);
 }
